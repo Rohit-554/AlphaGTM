@@ -4,8 +4,10 @@ import {
   ContactRound,
   LayoutGrid,
   List,
+  Moon,
   Plus,
   Sparkles,
+  Sun,
 } from 'lucide-react'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { BoardView, DetailsPanel, TableView, View } from './components'
@@ -20,6 +22,7 @@ import {
   NoMatches,
 } from './discovery'
 import { loadContacts, saveContacts } from './storage'
+import { applyTheme, initialTheme } from './theme'
 
 const emptyFilters: DiscoveryFilters = {
   query: '',
@@ -31,6 +34,7 @@ const emptyFilters: DiscoveryFilters = {
 type LastMove = { id: string; name: string; from: Stage; to: Stage }
 
 function App() {
+  const [theme, setTheme] = useState(initialTheme)
   const [contacts, setContacts] = useState(loadContacts)
   const [view, setView] = useState<View>('table')
   const [filters, setFilters] = useState<DiscoveryFilters>(emptyFilters)
@@ -50,6 +54,7 @@ function App() {
   const filtered = Object.values(filters).some(Boolean)
 
   useEffect(() => saveContacts(contacts), [contacts])
+  useEffect(() => applyTheme(theme), [theme])
   useEffect(() => {
     if (!lastMove) return
     const timer = window.setTimeout(() => setLastMove(null), 8000)
@@ -171,6 +176,17 @@ function App() {
             <span />
             Demo workspace
           </span>
+          <button
+            className="theme-toggle"
+            type="button"
+            aria-label={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}
+            aria-pressed={theme === 'dark'}
+            title={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}
+            onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}
+          >
+            {theme === 'light' ? <Moon size={15} /> : <Sun size={15} />}
+            <span>{theme === 'light' ? 'Dark mode' : 'Light mode'}</span>
+          </button>
           <span className="topbar-divider" />
           <span className="profile-avatar" aria-label="Rohit profile">
             R
