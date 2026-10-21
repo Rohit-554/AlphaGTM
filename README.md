@@ -32,6 +32,8 @@ Use **Add contact** to create a record with a required name and optional details
 
 On the board, drag a card into another stage to move it immediately. An **Undo** notice restores the previous stage for a short time. Opening the card and using the Stage field remains the keyboard-friendly option. Small transitions respect the browser's reduced-motion preference.
 
+Use the **Dark mode / Light mode** button in the header to switch palettes. The workspace starts with your system preference on first visit and remembers your selection in this browser. Both palettes use the same layout and contact data.
+
 ## Design choices
 
 - **Different density for different jobs.** The table uses compact rows for comparison; cards use a little more space to show who needs attention at each stage. Notes appear in the panel because long text makes both scanning surfaces harder to use.
@@ -39,6 +41,7 @@ On the board, drag a card into another stage to move it immediately. An **Undo**
 - **Visible edge cases.** Customer starts empty, and some contacts lack an email, role, labels, or notes. Missing values are shown as “Not added” or an em dash.
 - **Return to context.** The panel overlays the current view; closing it restores focus to the opening control, or to the moved card after a stage change. The table and board remain horizontally scrollable on narrower desktops.
 - **Quick moves with a recovery path.** Native drag-and-drop changes one record by ID. The latest board move can be undone; saving another edit clears that pending Undo action.
+- **Two palettes, one hierarchy.** Light mode uses soft white surfaces and a restrained green accent. Dark mode uses deep green charcoal surfaces with brighter text and stage colors. The switch is keyboard accessible and its preference is stored separately from contacts.
 
 ## Trade-offs and next steps
 

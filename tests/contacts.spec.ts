@@ -34,6 +34,35 @@ test('table and board show the same contacts, including an empty group', async (
   await expect(page.locator('.contacts-table tbody tr')).toHaveCount(10)
 })
 
+test('light and dark modes persist and keep views and editing usable', async ({
+  page,
+}) => {
+  await page.emulateMedia({ colorScheme: 'dark' })
+  await page.goto('/')
+  await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark')
+  await expect(
+    page.getByRole('button', { name: 'Switch to light mode' }),
+  ).toBeVisible()
+
+  await page.getByRole('button', { name: 'Board' }).click()
+  await page.locator('.contact-card').first().click()
+  await expect(page.getByRole('dialog')).toBeVisible()
+  await expect(page.locator('#contact-stage')).toBeFocused()
+  await page.getByRole('button', { name: 'Cancel' }).click()
+
+  await page.getByRole('button', { name: 'Switch to light mode' }).click()
+  await expect(page.locator('html')).toHaveAttribute('data-theme', 'light')
+  await expect(page.getByRole('button', { name: 'Board' })).toHaveAttribute(
+    'aria-pressed',
+    'true',
+  )
+  await page.reload()
+  await expect(page.locator('html')).toHaveAttribute('data-theme', 'light')
+  await page.getByRole('button', { name: 'Switch to dark mode' }).click()
+  await page.reload()
+  await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark')
+})
+
 test('stage and notes save across views; cancel and Escape discard drafts', async ({
   page,
 }) => {
