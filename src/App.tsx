@@ -1,22 +1,44 @@
 import {
   ArrowUpRight,
+  BarChart3,
   ContactRound,
   LayoutGrid,
   List,
   Sparkles,
 } from 'lucide-react'
-import { useRef, useState } from 'react'
+import { useMemo, useRef, useState } from 'react'
 import { BoardView, DetailsPanel, TableView, View } from './components'
 import { initialContacts, Stage } from './data'
+import {
+  DiscoveryControls,
+  DiscoveryFilters,
+  filterContacts,
+  InsightsView,
+  NoMatches,
+} from './discovery'
+
+const emptyFilters: DiscoveryFilters = {
+  query: '',
+  stage: '',
+  owner: '',
+  label: '',
+}
 
 function App() {
   const [contacts, setContacts] = useState(initialContacts)
   const [view, setView] = useState<View>('table')
+  const [filters, setFilters] = useState<DiscoveryFilters>(emptyFilters)
   const [selectedId, setSelectedId] = useState<string | null>(null)
   const triggerRef = useRef<HTMLElement | null>(null)
   const tableTabRef = useRef<HTMLButtonElement>(null)
   const boardTabRef = useRef<HTMLButtonElement>(null)
+  const insightsTabRef = useRef<HTMLButtonElement>(null)
   const selectedContact = contacts.find((contact) => contact.id === selectedId)
+  const visibleContacts = useMemo(
+    () => filterContacts(contacts, filters),
+    [contacts, filters],
+  )
+  const filtered = Object.values(filters).some(Boolean)
 
   const openContact = (id: string, trigger: HTMLElement) => {
     triggerRef.current = trigger
@@ -37,7 +59,11 @@ function App() {
         : null
       ;(
         movedCard ??
-        (view === 'table' ? tableTabRef.current : boardTabRef.current)
+        (view === 'table'
+          ? tableTabRef.current
+          : view === 'board'
+            ? boardTabRef.current
+            : insightsTabRef.current)
       )?.focus()
     })
   }
@@ -144,7 +170,12 @@ function App() {
           <div className="content-toolbar">
             <div>
               <h2>
-                All contacts <span>{contacts.length}</span>
+                All contacts{' '}
+                <span>
+                  {filtered
+                    ? `${visibleContacts.length} / ${contacts.length}`
+                    : contacts.length}
+                </span>
               </h2>
               <p>A home for every conversation and connection.</p>
             </div>
@@ -179,20 +210,50 @@ function App() {
               >
                 <LayoutGrid size={16} /> Board
               </button>
+              <button
+                ref={insightsTabRef}
+                type="button"
+                className={
+                  view === 'insights'
+                    ? 'view-button view-button--active'
+                    : 'view-button'
+                }
+                aria-pressed={view === 'insights'}
+                onClick={() => setView('insights')}
+              >
+                <BarChart3 size={16} /> Insights
+              </button>
             </div>
           </div>
-          {view === 'table' ? (
-            <TableView contacts={contacts} onOpen={openContact} />
+          <DiscoveryControls
+            contacts={contacts}
+            filters={filters}
+            onChange={setFilters}
+            onClear={() => setFilters(emptyFilters)}
+          />
+          {filtered && visibleContacts.length === 0 ? (
+            <NoMatches onClear={() => setFilters(emptyFilters)} />
+          ) : view === 'table' ? (
+            <TableView contacts={visibleContacts} onOpen={openContact} />
+          ) : view === 'board' ? (
+            <BoardView
+              contacts={visibleContacts}
+              onOpen={openContact}
+              filtered={filtered}
+            />
           ) : (
-            <BoardView contacts={contacts} onOpen={openContact} />
+            <InsightsView contacts={visibleContacts} onOpen={openContact} />
           )}
           <div className="content-footer">
             <span>
               <span className="footer-dot" />
-              Showing {contacts.length} fictional contacts
+              Showing {visibleContacts.length} of {contacts.length} fictional
+              contacts
             </span>
             <span>
-              Click a {view === 'table' ? 'row' : 'card'} to view details
+              Click a{' '}
+              {view === 'table' ? 'row' : view === 'board' ? 'card' : 'contact'}{' '}
+              to view details
             </span>
           </div>
         </section>

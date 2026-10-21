@@ -121,3 +121,65 @@ test('moving a card restores focus to its new board position', async ({
   ).toHaveText('1')
   await expect(page.locator('.contact-card')).toHaveCount(10)
 })
+
+test('search, combined filters, and Insights share one visible set', async ({
+  page,
+}) => {
+  await page.goto('/')
+  await page
+    .getByRole('searchbox', { name: 'Search contacts' })
+    .fill('northstar')
+  await expect(page.locator('.contacts-table tbody tr')).toHaveCount(1)
+  await expect(page.locator('.contacts-table tbody')).toContainText('Maya Chen')
+  await page.getByRole('button', { name: 'Board' }).click()
+  await expect(page.locator('.contact-card')).toHaveCount(1)
+  await page.getByRole('button', { name: 'Insights' }).click()
+  await expect(
+    page.getByRole('region', { name: 'Contact insights' }),
+  ).toContainText('Maya Chen')
+  await page
+    .getByRole('region', { name: 'Contact insights' })
+    .getByRole('button', { name: /Maya Chen/ })
+    .click()
+  await expect(page.getByRole('dialog')).toBeVisible()
+  await page.getByRole('button', { name: 'Close details' }).click()
+  await expect(page.getByRole('button', { name: 'Insights' })).toHaveAttribute(
+    'aria-pressed',
+    'true',
+  )
+
+  await page.getByRole('button', { name: 'Clear' }).click()
+  await page
+    .getByRole('combobox', { name: 'Filter by stage' })
+    .selectOption('Lead')
+  await page
+    .getByRole('combobox', { name: 'Filter by owner' })
+    .selectOption('Alex Carter')
+  await page
+    .getByRole('combobox', { name: 'Filter by label' })
+    .selectOption('Warm intro')
+  await expect(
+    page
+      .getByRole('region', { name: 'Contact insights' })
+      .locator('.insights-contact-list button'),
+  ).toHaveCount(1)
+  await expect(
+    page.getByRole('region', { name: 'Contact insights' }),
+  ).toContainText('Sofia Ramirez')
+  await page.getByRole('button', { name: 'Table' }).click()
+  await expect(page.locator('.contacts-table tbody tr')).toHaveCount(1)
+  await page.getByRole('button', { name: 'Board' }).click()
+  await expect(page.locator('.contact-card')).toHaveCount(1)
+})
+
+test('empty search results offer a clear recovery action', async ({ page }) => {
+  await page.goto('/')
+  await page
+    .getByRole('searchbox', { name: 'Search contacts' })
+    .fill('nothing-matches-this')
+  await expect(page.getByRole('status')).toContainText('No contacts found')
+  await page.getByRole('button', { name: 'Board' }).click()
+  await expect(page.getByRole('status')).toContainText('No contacts found')
+  await page.getByRole('button', { name: 'Clear search and filters' }).click()
+  await expect(page.locator('.contact-card')).toHaveCount(10)
+})

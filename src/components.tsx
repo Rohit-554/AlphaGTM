@@ -11,7 +11,7 @@ import {
 import { useEffect, useRef, useState } from 'react'
 import { Contact, initials, ownerInitials, Stage, stages } from './data'
 
-export type View = 'table' | 'board'
+export type View = 'table' | 'board' | 'insights'
 
 export function Avatar({
   contact,
@@ -173,9 +173,11 @@ export function TableView({
 export function BoardView({
   contacts,
   onOpen,
+  filtered = false,
 }: {
   contacts: Contact[]
   onOpen: (id: string, trigger: HTMLElement) => void
+  filtered?: boolean
 }) {
   return (
     <div
@@ -245,8 +247,14 @@ export function BoardView({
                     <div className="empty-icon">
                       <LayoutGrid size={20} strokeWidth={1.6} />
                     </div>
-                    <strong>No contacts yet</strong>
-                    <span>Move a contact here by changing their stage.</span>
+                    <strong>
+                      {filtered ? 'No matches here' : 'No contacts yet'}
+                    </strong>
+                    <span>
+                      {filtered
+                        ? 'Try another filter to see more contacts.'
+                        : 'Move a contact here by changing their stage.'}
+                    </span>
                   </div>
                 )}
               </div>

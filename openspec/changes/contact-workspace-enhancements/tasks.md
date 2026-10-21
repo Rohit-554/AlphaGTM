@@ -2,10 +2,10 @@
 
 ## 1. Discovery
 
-- [ ] 1.1 Add shared case-insensitive search and Stage/Owner/Label filters; verify combined filters produce the same visible IDs in Table and Board.
-- [ ] 1.2 Add clear controls and no-match states; verify users can recover from zero results in either view.
-- [ ] 1.3 Add an Insights view with stage and owner breakdowns plus contact entry points; verify its counts follow active filters and its panel returns to Insights.
-- [ ] 1.4 Add browser checks and README guidance for search, filters, and Insights; verify the checks pass and the documented behavior matches the UI.
+- [x] 1.1 Add shared case-insensitive search and Stage/Owner/Label filters; verify combined filters produce the same visible IDs in Table and Board.
+- [x] 1.2 Add clear controls and no-match states; verify users can recover from zero results in either view.
+- [x] 1.3 Add an Insights view with stage and owner breakdowns plus contact entry points; verify its counts follow active filters and its panel returns to Insights.
+- [x] 1.4 Add browser checks and README guidance for search, filters, and Insights; verify the checks pass and the documented behavior matches the UI.
 
 ## 2. Contact lifecycle
 

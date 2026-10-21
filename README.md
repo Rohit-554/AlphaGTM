@@ -26,6 +26,8 @@ To run the browser interaction checks, install Playwright's Chromium once with `
 
 Switch between **Table** and **Board** with the view control. Open any row or card to inspect a contact. Change **Stage** or **Notes**, then choose **Save changes** to commit both fields, or **Cancel**, the close button, or Escape to discard the draft. A saved stage change immediately moves the board card and updates the table. The active view remains in place when the panel closes.
 
+Search matches names, companies, roles, owners, email, labels, and notes. Stage, Owner, and Label filters can be combined and remain active across views. **Insights** uses the same filtered contacts to show stage and owner summaries; its contact list opens the same details panel.
+
 ## Design choices
 
 - **Different density for different jobs.** The table uses compact rows for comparison; cards use a little more space to show who needs attention at each stage. Notes appear in the panel because long text makes both scanning surfaces harder to use.
@@ -35,6 +37,6 @@ Switch between **Table** and **Board** with the view control. Open any row or ca
 
 ## Trade-offs and next steps
 
-This is intentionally an in-memory prototype: edits reset on reload. Only Stage and Notes are editable, matching the requested core flow. Search, filters, drag-and-drop, contact creation, persistence, and expanded browser tests would be useful next steps, but were left out to keep the exercise focused.
+This is intentionally an in-memory prototype: edits reset on reload. Only Stage and Notes are editable, matching the requested core flow. Drag-and-drop, contact creation, persistence, and expanded browser tests are being added in the follow-up change.
 
 The OpenSpec proposal, behavior specs, design decisions, and task checklist are in [`openspec/changes/contact-table-board-prototype`](openspec/changes/contact-table-board-prototype). Optional follow-ups are listed separately in `future.md` there.
