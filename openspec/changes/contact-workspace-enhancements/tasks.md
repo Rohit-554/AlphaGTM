@@ -23,5 +23,5 @@
 
 ## 4. Integration and delivery
 
-- [ ] 4.1 Run formatting, production build, and the full browser suite across repeated edits, filters, creation, deletion, reload, and drag; verify all checks pass.
-- [ ] 4.2 Update the existing Vercel deployment and README preview link; verify the public site shows the new controls.
+- [x] 4.1 Run formatting, production build, and the full browser suite across repeated edits, filters, creation, deletion, reload, and drag; verify all checks pass.
+- [x] 4.2 Update the existing Vercel deployment and README preview link; verify the public site shows the new controls.
