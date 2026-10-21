@@ -43,6 +43,10 @@ Use the **Dark mode / Light mode** button in the header to switch palettes. The 
 - **Quick moves with a recovery path.** Native drag-and-drop changes one record by ID. The latest board move can be undone; saving another edit clears that pending Undo action.
 - **Two palettes, one hierarchy.** [Alpha's public site](https://get-alpha.ai/#product) informed the neutral off-white and charcoal palette. Light and dark modes keep the same structure; small stage colors still help distinguish pipeline groups. The switch is keyboard accessible and its preference is stored separately from contacts.
 
+## Development process
+
+This prototype was built with an AI-assisted, agentic development workflow. OpenSpec was used to turn the assignment into a proposal, design decisions, behavior specs, and task checklists for the core flow and later enhancements. An AI coding agent assisted with implementation and iteration. The result was checked through production builds, formatting checks, Playwright browser tests, and visual review in both themes.
+
 ## Trade-offs and next steps
 
 This remains a browser-only prototype. Its data is not shared across devices or users, and clearing browser storage restores the seed contacts. Only Stage and Notes are editable after creation, matching the original core flow. Cards can move between stages but cannot be reordered within a stage.
