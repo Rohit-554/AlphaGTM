@@ -1,51 +1,51 @@
 :root {
   color-scheme: light;
-  --canvas: #f5f7f4;
-  --canvas-glow: #e9f2e8;
+  --canvas: #f7f7f7;
+  --canvas-glow: #f0f0f0;
   --surface: #ffffff;
-  --surface-soft: #fbfdfb;
-  --surface-muted: #f2f6f1;
-  --surface-hover: #f1f8f1;
-  --ink: #203629;
-  --ink-secondary: #4e6654;
-  --muted: #748678;
-  --subtle: #87998a;
-  --line: #e1e9e1;
-  --line-soft: #ecf1eb;
-  --accent: #356d4d;
-  --accent-strong: #275a3e;
-  --accent-soft: #e9f4e9;
-  --accent-button: #356d4d;
-  --accent-button-text: #ffffff;
-  --focus: #679d75;
-  --focus-ring: #e1f0e3;
-  --shadow-card: 0 8px 26px #24452c0b;
-  --shadow-float: 0 18px 60px #1b352738;
+  --surface-soft: #fafafa;
+  --surface-muted: #f1f1f1;
+  --surface-hover: #f4f4f4;
+  --ink: #292929;
+  --ink-secondary: #525252;
+  --muted: #707070;
+  --subtle: #858585;
+  --line: #dedede;
+  --line-soft: #ececec;
+  --accent: #404040;
+  --accent-strong: #252525;
+  --accent-soft: #ededed;
+  --accent-button: #404040;
+  --accent-button-text: #fafafa;
+  --focus: #606060;
+  --focus-ring: #dedede;
+  --shadow-card: 0 8px 26px #1f1f1f0b;
+  --shadow-float: 0 18px 60px #10101038;
 }
 
 :root[data-theme='dark'] {
   color-scheme: dark;
-  --canvas: #111b17;
-  --canvas-glow: #1c3022;
-  --surface: #1c2a22;
-  --surface-soft: #17241c;
-  --surface-muted: #273a2d;
-  --surface-hover: #2a4233;
-  --ink: #eef6ec;
-  --ink-secondary: #c4d7c6;
-  --muted: #adc0ad;
-  --subtle: #98ad9b;
-  --line: #3b5040;
-  --line-soft: #304338;
-  --accent: #a7ddb0;
-  --accent-strong: #c0ebc6;
-  --accent-soft: #294532;
-  --accent-button: #99d7a4;
-  --accent-button-text: #183522;
-  --focus: #b6e9bf;
-  --focus-ring: #365e42;
-  --shadow-card: 0 8px 26px #08120b38;
-  --shadow-float: 0 20px 70px #030905b3;
+  --canvas: #141414;
+  --canvas-glow: #202020;
+  --surface: #202020;
+  --surface-soft: #191919;
+  --surface-muted: #2b2b2b;
+  --surface-hover: #323232;
+  --ink: #f2f2f2;
+  --ink-secondary: #d4d4d4;
+  --muted: #b4b4b4;
+  --subtle: #9d9d9d;
+  --line: #3d3d3d;
+  --line-soft: #333333;
+  --accent: #eeeeee;
+  --accent-strong: #ffffff;
+  --accent-soft: #303030;
+  --accent-button: #eeeeee;
+  --accent-button-text: #242424;
+  --focus: #e6e6e6;
+  --focus-ring: #555555;
+  --shadow-card: 0 8px 26px #00000038;
+  --shadow-float: 0 20px 70px #000000b3;
 }
 
 :root {
@@ -345,7 +345,7 @@ textarea:focus-visible,
   color: var(--accent-button-text);
   background: var(--accent-button);
   border-color: var(--accent-button);
-  box-shadow: 0 4px 12px #1b442336;
+  box-shadow: 0 4px 12px #10101024;
 }
 
 .button--primary:hover {
@@ -357,9 +357,10 @@ textarea:focus-visible,
 .panel-scrim,
 .modal-scrim,
 .confirm-scrim {
-  background: #07130bc0;
+  background: #000000b5;
 }
 
+.search-field,
 .search-field input,
 .filter-select select {
   color: var(--ink-secondary);
@@ -385,32 +386,127 @@ textarea:focus-visible,
   background: var(--surface-hover);
 }
 
+.brand-dot,
+.heading-period,
+.page-footer span,
+.overview-caption svg {
+  color: var(--subtle);
+}
+
+.brand-mark span {
+  background: #444444;
+}
+.brand-mark span:nth-child(2) {
+  background: #999999;
+}
+.brand-mark span:nth-child(3) {
+  background: #6b6b6b;
+}
+.brand-mark span:nth-child(4) {
+  background: #cccccc;
+}
+
+.demo-badge span,
+.footer-dot,
+.save-status:before {
+  background: #737373;
+  box-shadow: 0 0 0 3px var(--accent-soft);
+}
+
+.footer-dot,
+.save-status:before {
+  box-shadow: none;
+}
+
+.topbar-divider {
+  background: var(--line);
+}
+
+.art-circle {
+  border-color: #e0e0e0;
+  background: linear-gradient(145deg, #f5f5f5, #e9e9e9);
+  box-shadow: 12px 14px 33px #2020200c;
+}
+.art-circle--two {
+  background: linear-gradient(130deg, #eeeeee, #d8d8d8);
+}
+.art-circle--three {
+  background: linear-gradient(130deg, #e5e5e5, #c7c7c7);
+}
+.art-spark {
+  background: #ffffff;
+  color: #666666;
+  box-shadow: 0 7px 20px #20202014;
+}
+
+.column-marker--customer,
+.select-dot--customer,
+.insights-fill--customer {
+  background: #949494;
+}
+
+.stage-pill--customer {
+  color: #555555;
+  background: #eeeeee;
+}
+
+.avatar--mint {
+  color: #5a7991;
+  background: #e0ebf2;
+}
+
+.avatar--sage {
+  color: #686d76;
+  background: #e9eaed;
+}
+
+.select-wrap select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='none' stroke='%23757575' stroke-width='2' viewBox='0 0 24 24'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+}
+
+.insights-fill--owner {
+  background: #a3a3a3;
+}
+
+.undo-toast {
+  color: #fafafa;
+  background: #404040;
+  box-shadow: 0 12px 32px #1111114d;
+}
+.undo-toast button {
+  color: #303030;
+  background: #f3f3f3;
+}
+.undo-toast button:hover {
+  background: #e4e4e4;
+}
+
 :root[data-theme='dark'] .art-circle {
-  border-color: #45644a;
-  background: linear-gradient(145deg, #294533, #203a2b);
-  box-shadow: 12px 14px 33px #08140b73;
+  border-color: #4b4b4b;
+  background: linear-gradient(145deg, #353535, #272727);
+  box-shadow: 12px 14px 33px #00000073;
 }
 
 :root[data-theme='dark'] .art-circle--two {
-  background: linear-gradient(130deg, #365f40, #477a51);
+  background: linear-gradient(130deg, #404040, #626262);
 }
 
 :root[data-theme='dark'] .art-circle--three {
-  background: linear-gradient(130deg, #315c3d, #6ca47a);
+  background: linear-gradient(130deg, #555555, #8a8a8a);
 }
 
 :root[data-theme='dark'] .art-spark {
-  background: #294533;
-  color: #b9e9bc;
+  background: #383838;
+  color: #ededed;
 }
 
 :root[data-theme='dark'] .heading-period,
 :root[data-theme='dark'] .brand-dot {
-  color: #9bd1a5;
+  color: #b3b3b3;
 }
 
 :root[data-theme='dark'] .brand-mark span:nth-child(4) {
-  background: #89be93;
+  background: #d0d0d0;
 }
 
 :root[data-theme='dark'] .topbar-divider {
@@ -418,7 +514,7 @@ textarea:focus-visible,
 }
 
 :root[data-theme='dark'] .demo-badge span {
-  box-shadow: 0 0 0 3px #284b32;
+  box-shadow: 0 0 0 3px #353535;
 }
 
 :root[data-theme='dark'] .avatar--peach {
@@ -430,8 +526,8 @@ textarea:focus-visible,
   color: #d0c4ff;
 }
 :root[data-theme='dark'] .avatar--mint {
-  background: #284a3c;
-  color: #a9e3c1;
+  background: #344959;
+  color: #bdd9ed;
 }
 :root[data-theme='dark'] .avatar--blue {
   background: #30465d;
@@ -458,8 +554,8 @@ textarea:focus-visible,
   color: #f2c19b;
 }
 :root[data-theme='dark'] .avatar--sage {
-  background: #3b4e38;
-  color: #c7e4b0;
+  background: #43464c;
+  color: #e0e1e4;
 }
 
 :root[data-theme='dark'] .stage-pill--lead {
@@ -475,8 +571,8 @@ textarea:focus-visible,
   background: #3b3655;
 }
 :root[data-theme='dark'] .stage-pill--customer {
-  color: #b5e2bd;
-  background: #2b4837;
+  color: #dedede;
+  background: #3c3c3c;
 }
 
 :root[data-theme='dark'] .delete-contact-button {
@@ -506,17 +602,17 @@ textarea:focus-visible,
 }
 
 :root[data-theme='dark'] .undo-toast {
-  background: #a5dcb0;
-  color: #183522;
+  background: #e7e7e7;
+  color: #252525;
 }
 
 :root[data-theme='dark'] .undo-toast button {
-  background: #24412d;
-  color: #eaf5e9;
+  background: #424242;
+  color: #f4f4f4;
 }
 
 :root[data-theme='dark'] .undo-toast button:hover {
-  background: #315b3d;
+  background: #5a5a5a;
 }
 
 .theme-toggle {

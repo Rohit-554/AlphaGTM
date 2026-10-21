@@ -10,7 +10,7 @@ export function applyTheme(theme: Theme) {
   document.documentElement.dataset.theme = theme
   document
     .querySelector<HTMLMetaElement>('meta[name="theme-color"]')
-    ?.setAttribute('content', theme === 'dark' ? '#111b17' : '#f5f7f4')
+    ?.setAttribute('content', theme === 'dark' ? '#141414' : '#f7f7f7')
   try {
     localStorage.setItem(themeKey, theme)
   } catch {
