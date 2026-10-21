@@ -174,12 +174,16 @@ export function TableView({
 export function BoardView({
   contacts,
   onOpen,
+  onMove,
   filtered = false,
 }: {
   contacts: Contact[]
   onOpen: (id: string, trigger: HTMLElement) => void
+  onMove: (id: string, stage: Stage) => void
   filtered?: boolean
 }) {
+  const [draggedId, setDraggedId] = useState<string | null>(null)
+  const [overStage, setOverStage] = useState<Stage | null>(null)
   return (
     <div
       className="board-scroll"
@@ -187,14 +191,31 @@ export function BoardView({
       aria-label="Contacts board"
       tabIndex={0}
     >
+      <p className="board-hint">
+        Drag a card to another stage, or open it to edit with the keyboard.
+      </p>
       <div className="board-grid">
         {stages.map((stage) => {
           const people = contacts.filter((contact) => contact.stage === stage)
           return (
             <section
-              className="board-column"
+              className={`board-column ${overStage === stage ? 'board-column--over' : ''}`}
               key={stage}
+              data-stage={stage}
               aria-label={`${stage}, ${people.length} contacts`}
+              onDragOver={(event) => {
+                if (!draggedId) return
+                event.preventDefault()
+                event.dataTransfer.dropEffect = 'move'
+                setOverStage(stage)
+              }}
+              onDrop={(event) => {
+                event.preventDefault()
+                const id = event.dataTransfer.getData('text/plain') || draggedId
+                if (id) onMove(id, stage)
+                setDraggedId(null)
+                setOverStage(null)
+              }}
             >
               <div className="board-column-heading">
                 <div className="board-column-title">
@@ -213,7 +234,18 @@ export function BoardView({
                       className="contact-card"
                       key={contact.id}
                       type="button"
+                      draggable
                       data-contact-id={contact.id}
+                      onDragStart={(event) => {
+                        event.dataTransfer.effectAllowed = 'move'
+                        event.dataTransfer.setData('text/plain', contact.id)
+                        setDraggedId(contact.id)
+                      }}
+                      onDragEnd={() => {
+                        setDraggedId(null)
+                        setOverStage(null)
+                      }}
+                      aria-description="Drag to change stage, or open to edit"
                       onClick={(event) =>
                         onOpen(contact.id, event.currentTarget)
                       }

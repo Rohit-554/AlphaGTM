@@ -16,10 +16,10 @@
 
 ## 3. Board interaction and motion
 
-- [ ] 3.1 Add card drag-and-drop between stage columns with a visible target; verify the moved record appears once in its new group and the table stage updates.
-- [ ] 3.2 Add a time-limited Undo action for the latest board move; verify Undo restores the previous stage and later edits clear stale undo state.
-- [ ] 3.3 Add subtle transitions and a reduced-motion rule; verify the rule disables nonessential animations while keyboard stage editing remains available.
-- [ ] 3.4 Add browser checks and README guidance for drag-and-drop and Undo; verify the checks pass.
+- [x] 3.1 Add card drag-and-drop between stage columns with a visible target; verify the moved record appears once in its new group and the table stage updates.
+- [x] 3.2 Add a time-limited Undo action for the latest board move; verify Undo restores the previous stage and later edits clear stale undo state.
+- [x] 3.3 Add subtle transitions and a reduced-motion rule; verify the rule disables nonessential animations while keyboard stage editing remains available.
+- [x] 3.4 Add browser checks and README guidance for drag-and-drop and Undo; verify the checks pass.
 
 ## 4. Integration and delivery
 

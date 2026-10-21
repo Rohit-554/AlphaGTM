@@ -16,6 +16,7 @@ import {
   DiscoveryFilters,
   filterContacts,
   InsightsView,
+  NoContacts,
   NoMatches,
 } from './discovery'
 import { loadContacts, saveContacts } from './storage'
@@ -27,12 +28,15 @@ const emptyFilters: DiscoveryFilters = {
   label: '',
 }
 
+type LastMove = { id: string; name: string; from: Stage; to: Stage }
+
 function App() {
   const [contacts, setContacts] = useState(loadContacts)
   const [view, setView] = useState<View>('table')
   const [filters, setFilters] = useState<DiscoveryFilters>(emptyFilters)
   const [selectedId, setSelectedId] = useState<string | null>(null)
   const [creating, setCreating] = useState(false)
+  const [lastMove, setLastMove] = useState<LastMove | null>(null)
   const triggerRef = useRef<HTMLElement | null>(null)
   const createButtonRef = useRef<HTMLButtonElement>(null)
   const tableTabRef = useRef<HTMLButtonElement>(null)
@@ -46,6 +50,11 @@ function App() {
   const filtered = Object.values(filters).some(Boolean)
 
   useEffect(() => saveContacts(contacts), [contacts])
+  useEffect(() => {
+    if (!lastMove) return
+    const timer = window.setTimeout(() => setLastMove(null), 8000)
+    return () => window.clearTimeout(timer)
+  }, [lastMove])
 
   const openContact = (id: string, trigger: HTMLElement) => {
     triggerRef.current = trigger
@@ -76,6 +85,7 @@ function App() {
   }
 
   const saveContact = (id: string, stage: Stage, notes: string) => {
+    setLastMove(null)
     setContacts((current) =>
       current.map((contact) =>
         contact.id === id ? { ...contact, stage, notes } : contact,
@@ -90,6 +100,7 @@ function App() {
   }
 
   const addContact = (contact: Contact) => {
+    setLastMove(null)
     setContacts((current) => [...current, contact])
     setFilters(emptyFilters)
     setCreating(false)
@@ -98,8 +109,40 @@ function App() {
   }
 
   const deleteContact = (id: string) => {
+    setLastMove(null)
     setContacts((current) => current.filter((contact) => contact.id !== id))
     closeContact()
+  }
+
+  const moveContact = (id: string, to: Stage) => {
+    const contact = contacts.find((person) => person.id === id)
+    if (!contact || contact.stage === to) return
+    setContacts((current) =>
+      current.map((person) =>
+        person.id === id ? { ...person, stage: to } : person,
+      ),
+    )
+    setLastMove({ id, name: contact.name, from: contact.stage, to })
+    requestAnimationFrame(() =>
+      document.querySelector<HTMLElement>(`[data-contact-id="${id}"]`)?.focus(),
+    )
+  }
+
+  const undoMove = () => {
+    if (!lastMove) return
+    setContacts((current) =>
+      current.map((contact) =>
+        contact.id === lastMove.id && contact.stage === lastMove.to
+          ? { ...contact, stage: lastMove.from }
+          : contact,
+      ),
+    )
+    setLastMove(null)
+    requestAnimationFrame(() =>
+      document
+        .querySelector<HTMLElement>(`[data-contact-id="${lastMove.id}"]`)
+        ?.focus(),
+    )
   }
 
   const counts = {
@@ -266,7 +309,9 @@ function App() {
             onChange={setFilters}
             onClear={() => setFilters(emptyFilters)}
           />
-          {filtered && visibleContacts.length === 0 ? (
+          {contacts.length === 0 ? (
+            <NoContacts onAdd={() => setCreating(true)} />
+          ) : filtered && visibleContacts.length === 0 ? (
             <NoMatches onClear={() => setFilters(emptyFilters)} />
           ) : view === 'table' ? (
             <TableView contacts={visibleContacts} onOpen={openContact} />
@@ -274,6 +319,7 @@ function App() {
             <BoardView
               contacts={visibleContacts}
               onOpen={openContact}
+              onMove={moveContact}
               filtered={filtered}
             />
           ) : (
@@ -312,6 +358,16 @@ function App() {
           onClose={closeCreate}
           onSave={addContact}
         />
+      ) : null}
+      {lastMove ? (
+        <div className="undo-toast" role="status" aria-live="polite">
+          <span>
+            {lastMove.name} moved to {lastMove.to}
+          </span>
+          <button type="button" onClick={undoMove}>
+            Undo
+          </button>
+        </div>
       ) : null}
     </div>
   )

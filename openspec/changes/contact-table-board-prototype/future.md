@@ -1,9 +1,9 @@
 # Optional follow-ups
 
-These are explicitly outside the core submission and are not required to complete the change.
+These were outside the core submission. The requested items are now covered by the separate `contact-workspace-enhancements` change.
 
-- Add search and filters once the two primary views are stable.
-- Add drag-and-drop stage movement with an accessible non-drag alternative.
-- Add contact creation and deletion with confirmation for destructive actions.
-- Persist edits locally or connect a backend if the prototype becomes a product.
-- Add automated browser coverage for the full editing and focus flows.
+- Completed: search, filters, and an Insights view.
+- Completed: drag-and-drop stage movement with a details-panel alternative and Undo.
+- Completed: contact creation and confirmed deletion.
+- Completed: browser-local persistence and expanded browser checks.
+- Still optional: backend storage and multi-user synchronization if this becomes a product.

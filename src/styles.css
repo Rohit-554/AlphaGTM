@@ -1469,6 +1469,133 @@ p {
     margin-left: auto;
   }
 }
+
+.board-hint {
+  margin: 0;
+  padding: 14px 27px 0;
+  color: #9ba99d;
+  font-size: 10px;
+}
+.board-grid {
+  padding-top: 15px;
+}
+.contact-card[draggable='true'] {
+  cursor: grab;
+}
+.contact-card[draggable='true']:active {
+  cursor: grabbing;
+}
+.board-column--over {
+  outline: 2px dashed #8cb597;
+  outline-offset: 5px;
+  border-radius: 5px;
+  background: #f3f9f3;
+}
+.undo-toast {
+  position: fixed;
+  right: 25px;
+  bottom: 24px;
+  z-index: 15;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  min-height: 44px;
+  padding: 8px 10px 8px 16px;
+  color: #fff;
+  background: #2f5e40;
+  border-radius: 9px;
+  box-shadow: 0 12px 32px #183a2370;
+  font-size: 12px;
+  font-weight: 700;
+  animation: toast-enter 0.2s ease-out both;
+}
+.undo-toast button {
+  height: 29px;
+  padding: 0 10px;
+  color: #2f5e40;
+  background: #f4fbf4;
+  border: 0;
+  border-radius: 5px;
+  font-size: 11px;
+  font-weight: 800;
+}
+.undo-toast button:hover {
+  background: #dff0e1;
+}
+.table-scroll,
+.board-scroll,
+.insights-view,
+.no-matches {
+  animation: view-enter 0.18s ease-out both;
+}
+.details-panel {
+  animation: panel-enter 0.2s ease-out both;
+}
+.create-dialog,
+.confirm-dialog {
+  animation: dialog-enter 0.18s ease-out both;
+}
+@keyframes view-enter {
+  from {
+    opacity: 0.5;
+    transform: translateY(5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@keyframes panel-enter {
+  from {
+    opacity: 0.8;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+@keyframes dialog-enter {
+  from {
+    opacity: 0.6;
+    transform: translateY(10px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+@keyframes toast-enter {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
+}
+@media (max-width: 700px) {
+  .board-hint {
+    padding-left: 18px;
+    padding-right: 18px;
+  }
+  .undo-toast {
+    right: 14px;
+    bottom: 14px;
+    left: 14px;
+    justify-content: space-between;
+  }
+}
 @media (max-width: 410px) {
   .content-toolbar {
     align-items: flex-start;

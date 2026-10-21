@@ -1,4 +1,10 @@
-import { BarChart3, Search, SlidersHorizontal, X } from 'lucide-react'
+import {
+  BarChart3,
+  ContactRound,
+  Search,
+  SlidersHorizontal,
+  X,
+} from 'lucide-react'
 import { Avatar } from './components'
 import { Contact, Stage, stages } from './data'
 
@@ -139,6 +145,21 @@ export function NoMatches({ onClear }: { onClear: () => void }) {
         onClick={onClear}
       >
         Clear search and filters
+      </button>
+    </div>
+  )
+}
+
+export function NoContacts({ onAdd }: { onAdd: () => void }) {
+  return (
+    <div className="no-matches" role="status">
+      <span className="no-matches-icon">
+        <ContactRound size={23} />
+      </span>
+      <h3>No contacts yet</h3>
+      <p>Add your first contact to start filling this workspace.</p>
+      <button className="button button--primary" type="button" onClick={onAdd}>
+        Add contact
       </button>
     </div>
   )

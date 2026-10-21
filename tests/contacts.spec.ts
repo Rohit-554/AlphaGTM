@@ -275,3 +275,89 @@ test('deletion requires confirmation and removes the record from every view', as
   await page.reload()
   await expect(page.locator('.contacts-table tbody tr')).toHaveCount(9)
 })
+
+test('dragging a card changes stage once and Undo restores it', async ({
+  page,
+}) => {
+  await page.goto('/')
+  await page.getByRole('button', { name: 'Board' }).click()
+  await page
+    .locator('[data-contact-id="jordan-lee"]')
+    .dragTo(page.locator('[data-stage="Customer"]'))
+  await expect(
+    page.locator('[data-stage="Customer"] .contact-card'),
+  ).toHaveCount(1)
+  await expect(page.locator('.contact-card')).toHaveCount(10)
+  await expect(page.getByRole('status')).toContainText(
+    'Jordan Lee moved to Customer',
+  )
+  await page.getByRole('button', { name: 'Undo' }).click()
+  await expect(
+    page.locator('[data-stage="Customer"] .contact-card'),
+  ).toHaveCount(0)
+  await expect(
+    page.locator('[data-stage="Lead"] [data-contact-id="jordan-lee"]'),
+  ).toHaveCount(1)
+  await page.getByRole('button', { name: 'Table' }).click()
+  await expect(
+    page.locator('.contacts-table tr').filter({ hasText: 'Jordan Lee' }),
+  ).toContainText('Lead')
+})
+
+test('a later edit clears stale Undo and reduced motion keeps panel editing usable', async ({
+  page,
+}) => {
+  await page.emulateMedia({ reducedMotion: 'reduce' })
+  await page.goto('/')
+  await page.getByRole('button', { name: 'Board' }).click()
+  const animation = await page
+    .locator('.board-scroll')
+    .evaluate((element) => getComputedStyle(element).animationName)
+  expect(animation).toBe('none')
+  await page
+    .locator('[data-contact-id="jordan-lee"]')
+    .dragTo(page.locator('[data-stage="Customer"]'))
+  await expect(page.getByRole('button', { name: 'Undo' })).toBeVisible()
+  await page.locator('[data-contact-id="maya-chen"]').click()
+  await page.locator('#contact-stage').selectOption('Lead')
+  await page.getByRole('button', { name: 'Save changes' }).click()
+  await expect(page.getByRole('button', { name: 'Undo' })).toHaveCount(0)
+  await expect(
+    page.locator('[data-stage="Lead"] [data-contact-id="maya-chen"]'),
+  ).toHaveCount(1)
+})
+
+test('board move Undo expires after the short recovery window', async ({
+  page,
+}) => {
+  await page.clock.install()
+  await page.goto('/')
+  await page.getByRole('button', { name: 'Board' }).click()
+  await page
+    .locator('[data-contact-id="jordan-lee"]')
+    .dragTo(page.locator('[data-stage="Customer"]'))
+  await expect(page.getByRole('button', { name: 'Undo' })).toBeVisible()
+  await page.clock.fastForward(8100)
+  await expect(page.getByRole('button', { name: 'Undo' })).toHaveCount(0)
+})
+
+test('an empty saved collection gives a path to add a contact', async ({
+  page,
+}) => {
+  await page.goto('/')
+  await page.evaluate(() =>
+    localStorage.setItem(
+      'kinship.contacts.v1',
+      JSON.stringify({ version: 1, contacts: [] }),
+    ),
+  )
+  await page.reload()
+  await expect(page.getByRole('status')).toContainText('No contacts yet')
+  await page
+    .getByRole('status')
+    .getByRole('button', { name: 'Add contact' })
+    .click()
+  await expect(
+    page.getByRole('dialog', { name: 'Add a contact' }),
+  ).toBeVisible()
+})
