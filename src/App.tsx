@@ -4,11 +4,13 @@ import {
   ContactRound,
   LayoutGrid,
   List,
+  Plus,
   Sparkles,
 } from 'lucide-react'
-import { useMemo, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { BoardView, DetailsPanel, TableView, View } from './components'
-import { initialContacts, Stage } from './data'
+import { Contact, Stage } from './data'
+import { CreateContactDialog } from './contactManagement'
 import {
   DiscoveryControls,
   DiscoveryFilters,
@@ -16,6 +18,7 @@ import {
   InsightsView,
   NoMatches,
 } from './discovery'
+import { loadContacts, saveContacts } from './storage'
 
 const emptyFilters: DiscoveryFilters = {
   query: '',
@@ -25,11 +28,13 @@ const emptyFilters: DiscoveryFilters = {
 }
 
 function App() {
-  const [contacts, setContacts] = useState(initialContacts)
+  const [contacts, setContacts] = useState(loadContacts)
   const [view, setView] = useState<View>('table')
   const [filters, setFilters] = useState<DiscoveryFilters>(emptyFilters)
   const [selectedId, setSelectedId] = useState<string | null>(null)
+  const [creating, setCreating] = useState(false)
   const triggerRef = useRef<HTMLElement | null>(null)
+  const createButtonRef = useRef<HTMLButtonElement>(null)
   const tableTabRef = useRef<HTMLButtonElement>(null)
   const boardTabRef = useRef<HTMLButtonElement>(null)
   const insightsTabRef = useRef<HTMLButtonElement>(null)
@@ -39,6 +44,8 @@ function App() {
     [contacts, filters],
   )
   const filtered = Object.values(filters).some(Boolean)
+
+  useEffect(() => saveContacts(contacts), [contacts])
 
   const openContact = (id: string, trigger: HTMLElement) => {
     triggerRef.current = trigger
@@ -74,6 +81,24 @@ function App() {
         contact.id === id ? { ...contact, stage, notes } : contact,
       ),
     )
+    closeContact()
+  }
+
+  const closeCreate = () => {
+    setCreating(false)
+    requestAnimationFrame(() => createButtonRef.current?.focus())
+  }
+
+  const addContact = (contact: Contact) => {
+    setContacts((current) => [...current, contact])
+    setFilters(emptyFilters)
+    setCreating(false)
+    triggerRef.current = createButtonRef.current
+    setSelectedId(contact.id)
+  }
+
+  const deleteContact = (id: string) => {
+    setContacts((current) => current.filter((contact) => contact.id !== id))
     closeContact()
   }
 
@@ -179,50 +204,60 @@ function App() {
               </h2>
               <p>A home for every conversation and connection.</p>
             </div>
-            <div
-              className="view-switch"
-              role="group"
-              aria-label="View contacts as"
-            >
+            <div className="toolbar-actions">
               <button
-                ref={tableTabRef}
+                ref={createButtonRef}
+                className="button button--primary add-contact"
                 type="button"
-                className={
-                  view === 'table'
-                    ? 'view-button view-button--active'
-                    : 'view-button'
-                }
-                aria-pressed={view === 'table'}
-                onClick={() => setView('table')}
+                onClick={() => setCreating(true)}
               >
-                <List size={16} /> Table
+                <Plus size={15} /> Add contact
               </button>
-              <button
-                ref={boardTabRef}
-                type="button"
-                className={
-                  view === 'board'
-                    ? 'view-button view-button--active'
-                    : 'view-button'
-                }
-                aria-pressed={view === 'board'}
-                onClick={() => setView('board')}
+              <div
+                className="view-switch"
+                role="group"
+                aria-label="View contacts as"
               >
-                <LayoutGrid size={16} /> Board
-              </button>
-              <button
-                ref={insightsTabRef}
-                type="button"
-                className={
-                  view === 'insights'
-                    ? 'view-button view-button--active'
-                    : 'view-button'
-                }
-                aria-pressed={view === 'insights'}
-                onClick={() => setView('insights')}
-              >
-                <BarChart3 size={16} /> Insights
-              </button>
+                <button
+                  ref={tableTabRef}
+                  type="button"
+                  className={
+                    view === 'table'
+                      ? 'view-button view-button--active'
+                      : 'view-button'
+                  }
+                  aria-pressed={view === 'table'}
+                  onClick={() => setView('table')}
+                >
+                  <List size={16} /> Table
+                </button>
+                <button
+                  ref={boardTabRef}
+                  type="button"
+                  className={
+                    view === 'board'
+                      ? 'view-button view-button--active'
+                      : 'view-button'
+                  }
+                  aria-pressed={view === 'board'}
+                  onClick={() => setView('board')}
+                >
+                  <LayoutGrid size={16} /> Board
+                </button>
+                <button
+                  ref={insightsTabRef}
+                  type="button"
+                  className={
+                    view === 'insights'
+                      ? 'view-button view-button--active'
+                      : 'view-button'
+                  }
+                  aria-pressed={view === 'insights'}
+                  onClick={() => setView('insights')}
+                >
+                  <BarChart3 size={16} /> Insights
+                </button>
+              </div>
             </div>
           </div>
           <DiscoveryControls
@@ -268,6 +303,14 @@ function App() {
           contact={selectedContact}
           onClose={closeContact}
           onSave={saveContact}
+          onDelete={deleteContact}
+        />
+      ) : null}
+      {creating ? (
+        <CreateContactDialog
+          contacts={contacts}
+          onClose={closeCreate}
+          onSave={addContact}
         />
       ) : null}
     </div>

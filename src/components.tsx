@@ -6,6 +6,7 @@ import {
   FileText,
   LayoutGrid,
   Mail,
+  Trash2,
   X,
 } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
@@ -270,17 +271,34 @@ export function DetailsPanel({
   contact,
   onClose,
   onSave,
+  onDelete,
 }: {
   contact: Contact
   onClose: () => void
   onSave: (id: string, stage: Stage, notes: string) => void
+  onDelete: (id: string) => void
 }) {
   const [stage, setStage] = useState<Stage>(contact.stage)
   const [notes, setNotes] = useState(contact.notes)
+  const [confirmDelete, setConfirmDelete] = useState(false)
   const dialogRef = useRef<HTMLElement>(null)
+  const confirmDialogRef = useRef<HTMLDivElement>(null)
   const stageRef = useRef<HTMLSelectElement>(null)
+  const deleteButtonRef = useRef<HTMLButtonElement>(null)
+  const confirmCancelRef = useRef<HTMLButtonElement>(null)
   const closeRef = useRef(onClose)
+  const confirmRef = useRef(confirmDelete)
   closeRef.current = onClose
+  confirmRef.current = confirmDelete
+
+  const cancelDelete = () => {
+    setConfirmDelete(false)
+    requestAnimationFrame(() => deleteButtonRef.current?.focus())
+  }
+
+  useEffect(() => {
+    if (confirmDelete) confirmCancelRef.current?.focus()
+  }, [confirmDelete])
 
   useEffect(() => {
     const previousOverflow = document.body.style.overflow
@@ -289,12 +307,20 @@ export function DetailsPanel({
     const onKeyDown = (event: KeyboardEvent) => {
       if (event.key === 'Escape') {
         event.preventDefault()
-        closeRef.current()
+        if (confirmRef.current) {
+          setConfirmDelete(false)
+          requestAnimationFrame(() => deleteButtonRef.current?.focus())
+        } else {
+          closeRef.current()
+        }
         return
       }
       if (event.key !== 'Tab') return
+      const activeDialog = confirmRef.current
+        ? confirmDialogRef.current
+        : dialogRef.current
       const focusable = Array.from(
-        dialogRef.current?.querySelectorAll<HTMLElement>(
+        activeDialog?.querySelectorAll<HTMLElement>(
           'button:not([disabled]), select, textarea, a[href]',
         ) ?? [],
       )
@@ -325,7 +351,9 @@ export function DetailsPanel({
         ref={dialogRef}
         className="details-panel"
         role="dialog"
-        aria-modal="true"
+        aria-modal={!confirmDelete}
+        aria-hidden={confirmDelete}
+        inert={confirmDelete}
         aria-labelledby="panel-title"
         aria-describedby="panel-description"
       >
@@ -446,6 +474,14 @@ export function DetailsPanel({
           <p className="field-hint">
             Only stage and notes are editable in this prototype.
           </p>
+          <button
+            ref={deleteButtonRef}
+            className="delete-contact-button"
+            type="button"
+            onClick={() => setConfirmDelete(true)}
+          >
+            <Trash2 size={15} /> Delete contact
+          </button>
         </div>
         <div className="panel-footer">
           <span
@@ -472,6 +508,51 @@ export function DetailsPanel({
           </div>
         </div>
       </aside>
+      {confirmDelete ? (
+        <div className="confirm-layer">
+          <div
+            className="confirm-scrim"
+            onClick={cancelDelete}
+            aria-hidden="true"
+          />
+          <div
+            ref={confirmDialogRef}
+            className="confirm-dialog"
+            role="alertdialog"
+            aria-modal="true"
+            aria-labelledby="delete-title"
+            aria-describedby="delete-description"
+          >
+            <span className="confirm-icon">
+              <Trash2 size={21} />
+            </span>
+            <h2 id="delete-title">Delete {contact.name}?</h2>
+            <p id="delete-description">
+              This removes the contact from every view in this browser.{' '}
+              {changed
+                ? 'Your unsaved edits will also be discarded.'
+                : 'This action cannot be undone.'}
+            </p>
+            <div className="confirm-actions">
+              <button
+                ref={confirmCancelRef}
+                className="button button--secondary"
+                type="button"
+                onClick={cancelDelete}
+              >
+                Keep contact
+              </button>
+              <button
+                className="button button--danger"
+                type="button"
+                onClick={() => onDelete(contact.id)}
+              >
+                Delete contact
+              </button>
+            </div>
+          </div>
+        </div>
+      ) : null}
     </div>
   )
 }

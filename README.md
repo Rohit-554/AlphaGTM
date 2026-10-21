@@ -28,15 +28,17 @@ Switch between **Table** and **Board** with the view control. Open any row or ca
 
 Search matches names, companies, roles, owners, email, labels, and notes. Stage, Owner, and Label filters can be combined and remain active across views. **Insights** uses the same filtered contacts to show stage and owner summaries; its contact list opens the same details panel.
 
+Use **Add contact** to create a record with a required name and optional details. The new contact opens in the shared panel. **Delete contact** in that panel asks for confirmation before removing a record. Changes are saved in this browser and remain after reload.
+
 ## Design choices
 
 - **Different density for different jobs.** The table uses compact rows for comparison; cards use a little more space to show who needs attention at each stage. Notes appear in the panel because long text makes both scanning surfaces harder to use.
-- **One source of truth.** Contacts live in the `App` component and are keyed by stable IDs. Both views derive directly from that array. The editor keeps a local draft until Save.
+- **One source of truth.** Contacts live in the `App` component and are keyed by stable IDs. All views derive directly from that array. The editor keeps a local draft until Save; a validated browser-local copy preserves changes across reloads.
 - **Visible edge cases.** Customer starts empty, and some contacts lack an email, role, labels, or notes. Missing values are shown as “Not added” or an em dash.
 - **Return to context.** The panel overlays the current view; closing it restores focus to the opening control, or to the moved card after a stage change. The table and board remain horizontally scrollable on narrower desktops.
 
 ## Trade-offs and next steps
 
-This is intentionally an in-memory prototype: edits reset on reload. Only Stage and Notes are editable, matching the requested core flow. Drag-and-drop, contact creation, persistence, and expanded browser tests are being added in the follow-up change.
+This remains a browser-only prototype. Its data is not shared across devices or users, and clearing browser storage restores the seed contacts. Only Stage and Notes are editable after creation, matching the original core flow. Drag-and-drop and expanded browser checks are being added in the follow-up change.
 
 The OpenSpec proposal, behavior specs, design decisions, and task checklist are in [`openspec/changes/contact-table-board-prototype`](openspec/changes/contact-table-board-prototype). Optional follow-ups are listed separately in `future.md` there.

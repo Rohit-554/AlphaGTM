@@ -183,3 +183,95 @@ test('empty search results offer a clear recovery action', async ({ page }) => {
   await page.getByRole('button', { name: 'Clear search and filters' }).click()
   await expect(page.locator('.contact-card')).toHaveCount(10)
 })
+
+test('saved edits persist across reload and malformed storage falls back safely', async ({
+  page,
+}) => {
+  await page.goto('/')
+  await page.locator('[data-contact-id="maya-chen"]').click()
+  await page.locator('#contact-notes').fill('Saved in this browser.')
+  await page.getByRole('button', { name: 'Save changes' }).click()
+  await page.reload()
+  await page.locator('[data-contact-id="maya-chen"]').click()
+  await expect(page.locator('#contact-notes')).toHaveValue(
+    'Saved in this browser.',
+  )
+  await page.getByRole('button', { name: 'Close details' }).click()
+  await page.evaluate(() =>
+    localStorage.setItem('kinship.contacts.v1', '{broken'),
+  )
+  await page.reload()
+  await expect(page.locator('.contacts-table tbody tr')).toHaveCount(10)
+})
+
+test('contact creation validates name, saves optional fields, and survives reload', async ({
+  page,
+}) => {
+  await page.goto('/')
+  await page.getByRole('button', { name: 'Add contact' }).click()
+  await page.getByRole('textbox', { name: /Name/ }).fill('   ')
+  await page
+    .getByRole('dialog')
+    .getByRole('button', { name: 'Add contact' })
+    .click()
+  await expect(page.getByText('Name is required.')).toBeVisible()
+  await page.getByRole('button', { name: 'Cancel' }).click()
+  await expect(page.locator('.contacts-table tbody tr')).toHaveCount(10)
+
+  await page.getByRole('button', { name: 'Add contact' }).click()
+  await page.getByRole('textbox', { name: /Name/ }).fill('Avery Morgan')
+  await page.getByRole('textbox', { name: /Email/ }).fill('avery@example.com')
+  await page.getByRole('textbox', { name: /Company/ }).fill('Helio')
+  await page.getByRole('combobox', { name: /Stage/ }).selectOption('Customer')
+  await page
+    .getByRole('dialog')
+    .getByRole('button', { name: 'Add contact' })
+    .click()
+  await expect(page.getByRole('dialog')).toContainText('Avery Morgan')
+  await page.getByRole('button', { name: 'Close details' }).click()
+  await expect(page.locator('.contacts-table tbody tr')).toHaveCount(11)
+  await page.getByRole('button', { name: 'Board' }).click()
+  await expect(
+    page
+      .getByRole('heading', { name: 'Customer' })
+      .locator('..')
+      .locator('.column-count'),
+  ).toHaveText('1')
+  await page.reload()
+  await expect(page.locator('.contacts-table tbody tr')).toHaveCount(11)
+  await expect(page.locator('.contacts-table tbody')).toContainText(
+    'Avery Morgan',
+  )
+})
+
+test('deletion requires confirmation and removes the record from every view', async ({
+  page,
+}) => {
+  await page.goto('/')
+  await page.locator('[data-contact-id="jordan-lee"]').click()
+  await page
+    .getByRole('dialog', { name: 'Jordan Lee' })
+    .getByRole('button', { name: 'Delete contact' })
+    .click()
+  await expect(page.getByRole('alertdialog')).toBeVisible()
+  await page.getByRole('button', { name: 'Keep contact' }).click()
+  await expect(page.getByRole('alertdialog')).toHaveCount(0)
+  await expect(page.getByRole('dialog', { name: 'Jordan Lee' })).toBeVisible()
+  await page
+    .getByRole('dialog', { name: 'Jordan Lee' })
+    .getByRole('button', { name: 'Delete contact' })
+    .click()
+  await page
+    .getByRole('alertdialog')
+    .getByRole('button', { name: 'Delete contact' })
+    .click()
+  await expect(page.locator('.contacts-table tbody tr')).toHaveCount(9)
+  await page.getByRole('button', { name: 'Board' }).click()
+  await expect(page.locator('.contact-card')).toHaveCount(9)
+  await page.getByRole('button', { name: 'Insights' }).click()
+  await expect(
+    page.getByRole('region', { name: 'Contact insights' }),
+  ).not.toContainText('Jordan Lee')
+  await page.reload()
+  await expect(page.locator('.contacts-table tbody tr')).toHaveCount(9)
+})

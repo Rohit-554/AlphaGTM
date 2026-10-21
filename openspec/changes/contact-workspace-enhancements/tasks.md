@@ -9,10 +9,10 @@
 
 ## 2. Contact lifecycle
 
-- [ ] 2.1 Add guarded browser-local persistence with a seed fallback; verify edits survive reload and malformed saved data does not crash the app.
-- [ ] 2.2 Add the contact creation form with required-name validation and optional fields; verify Save adds one contact and Cancel adds none.
-- [ ] 2.3 Add deletion with a distinct confirmation step; verify Cancel keeps the record and Confirm removes it from every view.
-- [ ] 2.4 Add browser checks and README guidance for creation, deletion, and the local-storage boundary; verify the checks pass.
+- [x] 2.1 Add guarded browser-local persistence with a seed fallback; verify edits survive reload and malformed saved data does not crash the app.
+- [x] 2.2 Add the contact creation form with required-name validation and optional fields; verify Save adds one contact and Cancel adds none.
+- [x] 2.3 Add deletion with a distinct confirmation step; verify Cancel keeps the record and Confirm removes it from every view.
+- [x] 2.4 Add browser checks and README guidance for creation, deletion, and the local-storage boundary; verify the checks pass.
 
 ## 3. Board interaction and motion
 
