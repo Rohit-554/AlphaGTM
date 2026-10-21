@@ -2,6 +2,8 @@
 
 A standalone contact table and stage board built for Alpha's Frontend Design Engineer exercise. The same ten fictional contacts appear in both views, and Stage and Notes edits are kept in one React state owner.
 
+**Live preview:** https://alpha-contact-workspace.vercel.app
+
 ## Run locally
 
 Requires Node.js 20.19+ or 22.12+.
