@@ -41,7 +41,7 @@ Use the **Dark mode / Light mode** button in the header to switch palettes. The 
 - **Visible edge cases.** Customer starts empty, and some contacts lack an email, role, labels, or notes. Missing values are shown as “Not added” or an em dash.
 - **Return to context.** The panel overlays the current view; closing it restores focus to the opening control, or to the moved card after a stage change. The table and board remain horizontally scrollable on narrower desktops.
 - **Quick moves with a recovery path.** Native drag-and-drop changes one record by ID. The latest board move can be undone; saving another edit clears that pending Undo action.
-- **Two palettes, one hierarchy.** Light mode uses soft white surfaces and a restrained green accent. Dark mode uses deep green charcoal surfaces with brighter text and stage colors. The switch is keyboard accessible and its preference is stored separately from contacts.
+- **Two palettes, one hierarchy.** [Alpha's public site](https://get-alpha.ai/#product) informed the neutral off-white and charcoal palette. Light and dark modes keep the same structure; small stage colors still help distinguish pipeline groups. The switch is keyboard accessible and its preference is stored separately from contacts.
 
 ## Trade-offs and next steps
 
